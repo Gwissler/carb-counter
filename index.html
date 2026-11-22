@@ -1,0 +1,132 @@
+<!doctype html>
+<!--
+  index.html - the Carb Counter page itself.
+
+  This file holds the page layout: the heading, the warning, the ingredient
+  text box, the servings box, the Calculate button and an empty area where
+  results appear. The look comes from style.css and the behaviour (matching
+  ingredients and adding up carbs) comes from app.js.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Carb Counter</title>
+  <meta name="description" content="Estimate the carbs in a baking recipe, in total and per serving.">
+
+  <!-- Fonts used by BBQnstuff.com: Fjalla One for headings, Source Sans for text. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Source+Sans+3:wght@400;600;700&display=swap">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <h1 class="logo">Carb Counter</h1>
+      <p class="tagline">Carb estimates for home baking</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Safety notice: always visible, because people use this for insulin. -->
+    <aside class="notice" role="note">
+      <strong>Estimates only.</strong>
+      Carb values are typical figures based on USDA data. Brands and measuring
+      vary. Check package labels and follow your care team's advice before
+      dosing insulin.
+    </aside>
+
+    <section class="card" aria-labelledby="recipe-heading">
+      <h2 id="recipe-heading">Your recipe</h2>
+
+      <form id="recipe-form" novalidate>
+        <label for="ingredients">Ingredients, one per line, in grams</label>
+        <p class="hint" id="ingredients-hint">
+          For example <code>250 g all-purpose flour</code>. Only grams work in this
+          version. The box starts with an example recipe; replace it with your own.
+        </p>
+        <!-- Pre-filled with an example banana bread so the page shows how it works. -->
+        <textarea id="ingredients" rows="10" spellcheck="false" aria-describedby="ingredients-hint">250 g all-purpose flour
+100 g brown sugar
+115 g unsalted butter, melted
+100 g eggs
+350 g mashed banana
+5 g baking soda
+3 g salt
+5 g vanilla extract
+60 g chopped walnuts</textarea>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="servings">Servings</label>
+            <input id="servings" type="number" min="1" step="1" value="12" inputmode="numeric">
+          </div>
+          <button type="submit" id="calculate">Calculate</button>
+        </div>
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+      </form>
+    </section>
+
+    <!-- Results are filled in by app.js after Calculate is pressed. -->
+    <section class="card" id="results" aria-live="polite" hidden>
+      <h2>Carb estimate</h2>
+
+      <div class="totals">
+        <div class="total">
+          <span class="total-label">Total carbs</span>
+          <span class="total-value" id="total-carbs"></span>
+        </div>
+        <div class="total">
+          <span class="total-label">Carbs per serving</span>
+          <span class="total-value" id="per-serving"></span>
+          <span class="total-sub" id="servings-note"></span>
+        </div>
+      </div>
+
+      <!-- Shown only when some lines could not be counted. -->
+      <div class="incomplete" id="incomplete" role="alert" hidden></div>
+
+      <p class="estimate-note">
+        These numbers are <strong>estimates</strong>. They are not a substitute
+        for package labels or medical advice.
+      </p>
+
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Ingredient</th>
+              <th scope="col" class="num">Grams</th>
+              <th scope="col" class="num">Carbs (g)</th>
+            </tr>
+          </thead>
+          <tbody id="results-body"></tbody>
+          <tfoot>
+            <tr>
+              <th scope="row">Total</th>
+              <td class="num" id="total-grams"></td>
+              <td class="num" id="total-carbs-table"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div id="flagged" hidden>
+        <h3>Lines not counted</h3>
+        <ul class="flag-list" id="flag-list"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      Carb values from the built-in ingredient list, based on USDA FoodData
+      Central. Estimates only.
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
